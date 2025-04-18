@@ -9,9 +9,14 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "dependencies": {
     "faker": "^6.6.6",
-    "postgres": "^3.4.5"
+    "postgres": "^3.4.5",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^9.7.0",
+    "@types/node": "^22.14.1"
   }
 }
