@@ -1,3 +1,3 @@
-## STREAMS 
+## STREAMS
 
 estudos simples de streams
