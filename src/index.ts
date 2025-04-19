@@ -4,7 +4,7 @@ import { pipeline } from "node:stream/promises";
 import { createWriteStream } from "node:fs";
 
 const query = sql`
-    SELECT * FROM products WHERE price_in_cents > 1000
+    SELECT * FROM products WHERE price_in_cents > 1000 LIMIT 1000
 `;
 
 const cursor = query.cursor(500);
