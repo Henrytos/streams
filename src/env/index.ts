@@ -1,21 +1,20 @@
-import {config} from "dotenv"
-import { z } from "zod"
+import { config } from "dotenv";
+import { z } from "zod";
 
-config()
+config();
 
 const envSchema = z.object({
-    DATABASE_URL: z.string().url(),
-    AWS_ACCESS_KEY_ID: z.string(),
-    AWS_SECRET_ACCESS_KEY: z.string(),
-    AWS_ACCOUNT_ID: z.string(),
-})
+  DATABASE_URL: z.string().url(),
+  AWS_ACCESS_KEY_ID: z.string(),
+  AWS_SECRET_ACCESS_KEY: z.string(),
+  AWS_ACCOUNT_ID: z.string(),
+});
 
-
-const envParse = envSchema.safeParse(process.env)
+const envParse = envSchema.safeParse(process.env);
 
 if (envParse.success === false) {
-    console.error("Invalid environment variables", envParse.error.format())
-    throw new Error("Invalid environment variables")
+  console.error("Invalid environment variables", envParse.error.format());
+  throw new Error("Invalid environment variables");
 }
 
-export const env = envParse.data
+export const env = envParse.data;

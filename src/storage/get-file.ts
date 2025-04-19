@@ -1,13 +1,11 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { env } from "../env/index.ts";
 
-interface UploadfileServiceRequest {
-  file: Buffer;
+interface GetFileServiceRequest {
   fileName: string;
-  fileType: string;
 }
 
-export class UploadfileService {
+export class GetFileService {
   private client: S3Client;
 
   constructor() {
@@ -25,19 +23,17 @@ export class UploadfileService {
     });
   }
 
-  async execute({ file, fileName, fileType }: UploadfileServiceRequest) {
+  async execute({ fileName }: GetFileServiceRequest) {
     const bucket = "dashboard";
     const key = fileName;
 
     const uploadParams = {
       Bucket: bucket,
       Key: key,
-      Body: file,
-      ContentType: fileType,
     };
 
     try {
-      const data = await this.client.send(new PutObjectCommand(uploadParams));
+      const data = await this.client.send(new GetObjectCommand(uploadParams));
       return data;
     } catch (error) {
       console.error("Error uploading file:", error);
