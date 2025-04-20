@@ -12,15 +12,19 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
-  node:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    env_file: .env.local
-    environment:
-      - DATABASE_URL=postgres://docker:docker@database:5432/docker
-    depends_on:
-      - database
+  # node:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
+  #   env_file: .env.local
+  #   environment:
+  #     - DATABASE_URL=postgres://docker:docker@database:5432/docker
+  #   depends_on:
+  #     - database
+  #   ports:
+  #     - "3000:3000"
+  #   volumes:
+  #     - .:/home/app
 
 volumes:
   db_data:
