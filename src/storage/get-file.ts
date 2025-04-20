@@ -24,7 +24,7 @@ export class GetFileService {
   }
 
   async execute({ fileName }: GetFileServiceRequest) {
-    const bucket = "dashboard";
+    const bucket = env.AWS_BUCKET_NAME;
     const key = fileName;
 
     const uploadParams = {
@@ -34,7 +34,12 @@ export class GetFileService {
 
     try {
       const data = await this.client.send(new GetObjectCommand(uploadParams));
-      return data;
+      
+      if(data.Body){
+        data.Body.pipe(process.stdout); // Stream the file to stdout
+      }
+
+      return `${env.AWS_URL_PUBLIC_BUCKET}/${fileName}`;
     } catch (error) {
       console.error("Error uploading file:", error);
       throw new Error("Error uploading file");
