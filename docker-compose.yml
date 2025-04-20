@@ -16,6 +16,9 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    env_file: .env.local
+    environment:
+      - DATABASE_URL=postgres://docker:docker@database:5432/docker
     depends_on:
       - database
 
