@@ -26,7 +26,7 @@ export class UploadfileService {
   }
 
   async execute({ file, fileName, fileType }: UploadfileServiceRequest) {
-    const bucket = "dashboard";
+    const bucket = env.AWS_BUCKET_NAME;
     const key = fileName;
 
     const uploadParams = {

@@ -1,21 +1,19 @@
 import { sql } from "./database/client.ts";
 import { Transform } from "stream";
 import { pipeline } from "node:stream/promises";
-import { createWriteStream } from "node:fs";
+import { createReadStream, createWriteStream } from "node:fs";
+import { WriteStream } from "node:tty";
+import { UploadfileService } from "./storage/upload-file.ts";
+import { readFile } from "node:fs/promises";
+import { GetFileService } from "./storage/get-file.ts";
 
 const query = sql`
-    SELECT * FROM products WHERE price_in_cents > 1000 LIMIT 1000
+    SELECT * FROM products WHERE price_in_cents > 1000 LIMIT 100
 `;
 
-const cursor = query.cursor(500);
+const cursor = query.cursor(10);
 
-// for await (const row of cursor) {
-//     console.table(row)
-//
-//     break;
-// }
-
-const exampleStream = new Transform({
+const transformStream = new Transform({
   objectMode: true,
   transform(chunk, _, callback) {
     for (const row of chunk) {
@@ -28,22 +26,40 @@ const exampleStream = new Transform({
   },
 });
 
-exampleStream.on("data", (data) => {
-  console.log("Data from stream:", data.toString());
+
+const  writeStream= createWriteStream("./dashboard.csv", {
+  encoding: "utf-8",
 });
 
-exampleStream.on("end", () => {
-  console.log("Stream ended");
-});
+writeStream.on("finish",async ()=>{
+  console.log("File written successfully"); 
 
-exampleStream.on("pipe", (src) => {
-  console.log("Stream piped from:", src);
-});
+  const uploadfileService = new UploadfileService();
+  const fileName = "dashboard.csv";
+  const fileType = "text/csv";
+  const file = await readFile("./dashboard.csv");
+
+  await uploadfileService.execute({
+    file,
+    fileName,
+    fileType,
+  });
+
+  const getFileService = new GetFileService()
+  
+  const fileData = await getFileService.execute({
+    fileName,
+  });
+
+  console.log(fileData);
+  
+  await sql.end();
+})
 
 await pipeline(
   cursor,
-  exampleStream,
-  createWriteStream("./dashboard.csv", "utf-8"),
+  transformStream,
+  writeStream,
 );
 
 await sql.end();
