@@ -10,6 +10,11 @@ const envSchema = z.object({
   AWS_ACCOUNT_ID: z.string(),
   AWS_BUCKET_NAME: z.string(),
   AWS_URL_PUBLIC_BUCKET: z.string().url(),
+  SMTP_HOST: z.string(),
+  SMTP_PORT: z.coerce.number(),
+  SMTP_USER: z.string(),
+  SMTP_PASSWORD: z.string(),
+  ENTERPRISE_EMAIL_CONTACT: z.string().email(),
 });
 
 const envParse = envSchema.safeParse(process.env);
