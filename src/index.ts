@@ -1,11 +1,12 @@
 import { sql } from "./database/client.ts";
 import { Transform } from "stream";
 import { pipeline } from "node:stream/promises";
-import { createReadStream, createWriteStream } from "node:fs";
-import { WriteStream } from "node:tty";
-import { UploadfileService } from "./storage/upload-file.ts";
+import { createWriteStream } from "node:fs";
+import { UploadfileService } from "./service/upload-file-service.ts";
 import { readFile } from "node:fs/promises";
-import { GetFileService } from "./storage/get-file.ts";
+import { GetFileService } from "./service/get-file-service.ts";
+import { SendEmailService } from "./service/send-email-service.ts";
+import { env } from "./env/index.ts";
 
 const query = sql`
     SELECT * FROM products WHERE price_in_cents > 1000 LIMIT 100
@@ -26,13 +27,12 @@ const transformStream = new Transform({
   },
 });
 
-
-const  writeStream= createWriteStream("./dashboard.csv", {
+const writeStream = createWriteStream("./dashboard.csv", {
   encoding: "utf-8",
 });
 
-writeStream.on("finish",async ()=>{
-  console.log("File written successfully"); 
+writeStream.on("finish", async () => {
+  console.log("File written successfully");
 
   const uploadfileService = new UploadfileService();
   const fileName = "dashboard.csv";
@@ -45,21 +45,29 @@ writeStream.on("finish",async ()=>{
     fileType,
   });
 
-  const getFileService = new GetFileService()
-  
-  const fileData = await getFileService.execute({
+  const getFileService = new GetFileService();
+
+  const { fileUrl } = await getFileService.execute({
     fileName,
   });
 
-  console.log(fileData);
-  
-  await sql.end();
-})
+  console.log({ fileUrl });
 
-await pipeline(
-  cursor,
-  transformStream,
-  writeStream,
-);
+  const sendEmailService = new SendEmailService();
+  await sendEmailService.execute({
+    from: env.ENTERPRISE_EMAIL_CONTACT,
+    to: "jhon-doe@gmail.com",
+    subject: "Dashboard CSV",
+    html: `csv url link: <a href='${fileUrl}' target='__blank'>csv click</a>`,
+  });
+
+  await new Promise((resolve) => {
+    setTimeout(() => resolve, 5_000); // wait 5 seconds
+  });
+
+  await sql.end();
+});
+
+await pipeline(cursor, transformStream, writeStream);
 
 await sql.end();
