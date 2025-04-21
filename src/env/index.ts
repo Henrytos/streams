@@ -4,6 +4,8 @@ config();
 
 const envSchema = z.object({
   DATABASE_URL: z.string().url(),
+  HOST: z.string().default("localhost"),
+  PORT: z.coerce.number().default(3000),
   AWS_ACCESS_KEY_ID: z.string(),
   AWS_SECRET_ACCESS_KEY: z.string(),
   AWS_ACCOUNT_ID: z.string(),
@@ -14,7 +16,6 @@ const envSchema = z.object({
   SMTP_USER: z.string(),
   SMTP_PASSWORD: z.string(),
   ENTERPRISE_EMAIL_CONTACT: z.string().email(),
-  PORT: z.coerce.number().default(3000),
 });
 
 const envParse = envSchema.safeParse(process.env);
