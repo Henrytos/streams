@@ -17,6 +17,7 @@ app.register(ServerControllers);
 app
   .listen({
     port: env.PORT,
+    host: env.HOST,
   })
   .then(() => {
     console.log(`🚀🚀 Server is running on port ${env.PORT} 🚀🚀`);

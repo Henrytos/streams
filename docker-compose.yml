@@ -11,6 +11,20 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - database
+    environment:
+      DATABASE_URL: postgres://docker:docker@database:5432/docker
+      DATABASE_NAME: docker
+      DATABASE_USER: docker
+      DATABASE_PASSWORD: docker
 
 volumes:
   db_data:
