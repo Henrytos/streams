@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node --no-warnings --env-file .env.local src/index.ts",
-    "dev": "node --watch --no-warnings --env-file .env.local src/http/server.ts "
+    "start": "node --no-warnings --env-file .env src/index.ts",
+    "dev": "tsx --watch src/http/server.ts"
   },
   "keywords": [],
   "author": "",

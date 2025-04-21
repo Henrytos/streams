@@ -1,5 +1,5 @@
 async function getProducts() {
-    const response = await fetch("https://localhost:3000/products");
+    const response = await fetch("http://localhost:3000/products");
     const data = await response.json();
     const products = data.products;
 
@@ -15,8 +15,8 @@ function renderProductsInTable(products) {
         row.innerHTML = `
             <td>${product.id}</td>
             <td>${product.name}</td>
-            <td>${product.price}</td>
-            <td>${product.category}</td>
+            <td>${product.description}</td>
+            <td>${product.price_in_cents}</td>
         `;
         tableBody.appendChild(row);
     });
@@ -25,4 +25,16 @@ function renderProductsInTable(products) {
 document.addEventListener("DOMContentLoaded", async () => {
     const products = await getProducts();
     renderProductsInTable(products);
+});
+
+document.getElementById("button-download-csv").addEventListener("click", async () => {                      
+    const response = await fetch("http://localhost:3000/products/download");
+    const {fileUrl} = await response.json();
+    
+    const a = document.createElement("a");
+    a.style.display = "none";
+    a.href = fileUrl;
+    a.download = "products.csv";
+    document.body.appendChild(a);
+    a.click();
 });

@@ -1,13 +1,14 @@
-FROM node 
+FROM node
 
 RUN mkdir /home/app
 
-COPY package.json /home/app
-
 WORKDIR /home/app
+
+COPY . .
 
 RUN npm install
 
-COPY . /home/app
+EXPOSE 3000
 
-CMD ["npm","run" ,"dev"]
+CMD ["npm","run", "dev"]
+
