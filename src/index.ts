@@ -20,7 +20,14 @@ const transformStream = new Transform({
     for (const row of chunk) {
       console.log(row);
 
-      this.push(JSON.stringify({ id: row.id, name: row.name }).concat("\n"));
+      this.push(
+        JSON.stringify({
+          id: row.id,
+          name: row.name,
+          description: row.description,
+          price_in_cents: row.price_in_cents,
+        }).concat("\n"),
+      );
     }
 
     callback();

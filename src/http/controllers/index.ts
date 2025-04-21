@@ -4,5 +4,5 @@ import { GetUrlProductsCSVController } from "./get-url-products-csv-controller.t
 
 export async function ServerControllers(app: FastifyInstance) {
   app.get("/products", ListProductsController);
-  app.get("/products/url-csv", GetUrlProductsCSVController);
+  app.get("/products/download", GetUrlProductsCSVController);
 }

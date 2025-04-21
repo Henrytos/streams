@@ -2,10 +2,14 @@ import fastify from "fastify";
 import { env } from "../env/index.ts";
 import { ServerControllers } from "./controllers/index.ts";
 
+import cors from "@fastify/cors";
+
 const app = fastify();
 
-app.register(import("@fastify/cors"), {
+await app.register(cors, {
   origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization", "Accept"],
 });
 
 app.register(ServerControllers);
