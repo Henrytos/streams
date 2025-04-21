@@ -1,6 +1,5 @@
-import { config } from "dotenv";
 import { z } from "zod";
-
+import { config } from "dotenv";
 config();
 
 const envSchema = z.object({
@@ -15,6 +14,7 @@ const envSchema = z.object({
   SMTP_USER: z.string(),
   SMTP_PASSWORD: z.string(),
   ENTERPRISE_EMAIL_CONTACT: z.string().email(),
+  PORT: z.coerce.number().default(3000),
 });
 
 const envParse = envSchema.safeParse(process.env);
